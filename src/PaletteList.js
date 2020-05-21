@@ -10,6 +10,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { withStyles } from '@material-ui/styles';
 import blue from '@material-ui/core/colors/blue';
@@ -27,6 +28,7 @@ class PaletteList extends Component {
 		this.closeDialog = this.closeDialog.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
 		this.goToPalette = this.goToPalette.bind(this);
+		this.restoreDefaultPalettes = this.restoreDefaultPalettes.bind(this);
 	}
 	openDialog(id) {
 		this.setState({ openDeleteDialog: true, deletingId: id });
@@ -41,6 +43,10 @@ class PaletteList extends Component {
 		this.props.deletePalette(this.state.deletingId);
 		this.closeDialog();
 	}
+	restoreDefaultPalettes() {
+		window.localStorage.clear();
+		window.location.reload();
+	}
 	render() {
 		const { palettes, classes } = this.props;
 		const { openDeleteDialog } = this.state;
@@ -52,18 +58,29 @@ class PaletteList extends Component {
 						<Link to="/palette/new">Create Palette</Link>
 					</nav>
 					<TransitionGroup className={classes.palettes}>
-						{palettes.map((palette) => (
-							<CSSTransition key={palette.id} classNames="fade" timeout={500}>
-								<MiniPalette
-									{...palette}
-									goToPalette={this.goToPalette}
-									// deletePalette={deletePalette}
-									openDialog={this.openDialog}
-									key={palette.id}
-									id={palette.id}
-								/>
-							</CSSTransition>
-						))}
+						{palettes.length > 0 ? (
+							palettes.map((palette) => (
+								<CSSTransition key={palette.id} classNames="fade" timeout={500}>
+									<MiniPalette
+										{...palette}
+										goToPalette={this.goToPalette}
+										// deletePalette={deletePalette}
+										openDialog={this.openDialog}
+										key={palette.id}
+										id={palette.id}
+									/>
+								</CSSTransition>
+							))
+						) : (
+							<Button
+								variant="contained"
+								className={classes.button}
+								color="default"
+								onClick={this.restoreDefaultPalettes}
+							>
+								Restore Default Palettes
+							</Button>
+						)}
 					</TransitionGroup>
 				</div>
 				<Dialog open={openDeleteDialog} aria-labelledby="delete-dialog-title" onClose={this.closeDialog}>

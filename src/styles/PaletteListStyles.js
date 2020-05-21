@@ -54,5 +54,12 @@ export default {
 		[sizes.down('xs')]: {
 			gridTemplateColumns: 'repeat(1, 85%)'
 		}
+	},
+	button: {
+		gridArea: '1 / 2 / 2 / 3',
+		marginTop: '7rem',
+		[sizes.down('sm')]: {
+			gridArea: '1 / 1 / 2 / 3'
+		}
 	}
 };
